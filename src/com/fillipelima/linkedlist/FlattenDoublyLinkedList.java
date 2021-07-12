@@ -37,6 +37,9 @@ class FlattenDoublyLinkedList {
         public Node prev;
         public Node next;
         public Node child;
+        public Node(int n) {
+        	val = n;
+        }
     }
         
 }
