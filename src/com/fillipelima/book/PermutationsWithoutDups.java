@@ -1,54 +1,46 @@
 package com.fillipelima.book;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /*
  * Permutations without Dups: 
  * Write a method to compute all permutations of a string of unique characters.
+ * 
+ * abc -> abc bac bca cba cab acb  	
+ * 
  */
 public class PermutationsWithoutDups {
 	
 	public static void main(String[] args) {
-		System.out.println("Brute Force           :" + new PermutationsWithoutDups().compute("abcd"));
-		System.out.println("Recursive with Java 8+:" + new PermutationsWithoutDups().recursive("abcd"));
+		System.out.println(new PermutationsWithoutDups().getPerms("abc"));
 	}
-	
-	// Brute Force
-	public List<String> compute(String s) {
-		List<String> list = new ArrayList<String>();
-		for (int i = 0; i < s.length(); i++) {
-			String a = String.valueOf(s.charAt(i));
-			List<String> newPermutations = new ArrayList<String>();
-			for (String e : list) {
-				newPermutations.add(e+a);
-			}
-			list.addAll(newPermutations);	
-			list.add(a);						
+
+	public ArrayList<String> getPerms(String str) {
+		if (str == null)
+			return null;
+		ArrayList<String> permutations = new ArrayList<String>();
+		if (str.length() == 0) {// base case
+			permutations.add("");
+			return permutations;
 		}
-		return list;
+
+		char first = str.charAt(0); // get the first char
+		String remainder = str.substring(1); // remove the first char
+		ArrayList<String> words = getPerms(remainder);
+		for (String word : words) {
+			for (int j = 0; j <= word.length(); j++) {
+				String s = insertCharAt(word, first, j);
+				permutations.add(s);
+			}
+		}
+		return permutations;
 	}
-	
-	// Recursive with Jaba 8
-	public List<String> recursive(String s) {
-		List<String> list = new ArrayList<String>();				
-		helper(s, list);
-		return list;
+
+	/* Insert char c at index i in word. */
+	String insertCharAt(String word, char c, int i) {
+		String start = word.substring(0, i);
+		String end = word.substring(i);
+		return start + c + end;
 	}
-	
-	private void helper(String s, List<String> list) {
-		if (s.length() == 0)
-			return;
-		List<String> newPermutation = list.stream().map(e -> e + String.valueOf(s.charAt(0)) ).collect(Collectors.toList());
-		list.addAll(newPermutation);		
-		list.add(String.valueOf(s.charAt(0)));
-		
-		helper(s.length()==1 ? "" : s.substring(1), list);
-	}
-	
-	
-	// Best time / space complexity
-	
-	
+
 }
