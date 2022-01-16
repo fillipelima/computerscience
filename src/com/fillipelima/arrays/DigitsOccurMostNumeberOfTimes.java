@@ -59,7 +59,7 @@ public class DigitsOccurMostNumeberOfTimes {
 	}
 	public static void main(String[] args) {
 		System.out.println("-- With Custom Type --");
-		int[] r1 = DigitsOccurMostNumeberOfTimes.calculateWithPrimitiveType((new int[] {1, 2, 2, 3, 3, 5, 5, 5, 4, 4, 4, 6, 7, 8, 9}));
+		int[] r1 = DigitsOccurMostNumeberOfTimes.calculateWithCustomType((new int[] {1, 2, 2, 3, 3, 5, 5, 5, 4, 4, 4, 6, 7, 8, 9}));
 		Arrays.stream(r1).forEach(e -> System.out.println(e));
 		System.out.println("-- With Primitive Type --");
 		int[] r2 = DigitsOccurMostNumeberOfTimes.calculateWithPrimitiveType((new int[] {1, 2, 2, 3, 3, 5, 5, 5, 4, 4, 4, 6, 7, 8, 9}));
