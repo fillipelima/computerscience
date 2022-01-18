@@ -2,6 +2,7 @@ package com.fillipelima.arrays;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -13,26 +14,22 @@ import java.util.Queue;
 public class DigitsOccurMostNumeberOfTimes {
 	public static int[] calculateWithCustomType(int[] a) {
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-		Queue<MyPair> queue = new PriorityQueue<MyPair>(Comparator.comparing(MyPair::getCount).reversed().thenComparing(MyPair::getNumber));
-		List<Integer> list = new ArrayList<Integer>();
+		List<MyPair> list = new ArrayList<MyPair>();
 		
+		// Build map with numbers and how many time each occurs
 		for (int n : a) 
 			map.put(n, map.getOrDefault(n, 0)+1);
 		
+		// Add Map Entries as Pairs to list to be able to sort
 		for (Map.Entry<Integer, Integer> e : map.entrySet())
-			queue.add(new MyPair(e.getKey(), e.getValue()));
+			list.add(new MyPair(e.getKey(), e.getValue()));
 		
-		Integer lastCount = 0;
-		for (MyPair n : queue) {
-			if (lastCount == 0 || lastCount.equals(n.getCount())) 
-				list.add(n.getNumber());
-			else
-				break;
-			lastCount = n.getCount();
-		}
-			
+		// Sort
+		Collections.sort(list, Comparator.comparing(MyPair::getCount).reversed().thenComparingInt(MyPair::getNumber));
 		
-		return list.stream().mapToInt(i->i).toArray();
+		// Filter pairs with max occurrence number only
+		int max = list.stream().max(Comparator.comparing(MyPair::getCount)).get().getCount();
+		return list.stream().filter(v -> v.getCount().equals(max)).mapToInt(v -> v.getNumber()).toArray();
 	}
 	public static int[] calculateWithPrimitiveType(int[] a) {
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
@@ -46,7 +43,8 @@ public class DigitsOccurMostNumeberOfTimes {
 			queue.add(new int[] {e.getKey(), e.getValue()});
 		
 		Integer lastCount = 0;
-		for (int[] n : queue) {
+		while (!queue.isEmpty()) {
+			int[] n = queue.poll();
 			if (lastCount == 0 || lastCount.equals(n[1])) 
 				list.add(n[0]);
 			else
@@ -59,7 +57,7 @@ public class DigitsOccurMostNumeberOfTimes {
 	}
 	public static void main(String[] args) {
 		System.out.println("-- With Custom Type --");
-		int[] r1 = DigitsOccurMostNumeberOfTimes.calculateWithCustomType((new int[] {1, 2, 2, 3, 3, 5, 5, 5, 4, 4, 4, 6, 7, 8, 9}));
+		int[] r1 = DigitsOccurMostNumeberOfTimes.calculateWithCustomType((new int[] {10, 10, 10, 1, 2, 2, 3, 3, 5, 5, 5, 4, 4, 4, 6, 7, 8, 9}));
 		Arrays.stream(r1).forEach(e -> System.out.println(e));
 		System.out.println("-- With Primitive Type --");
 		int[] r2 = DigitsOccurMostNumeberOfTimes.calculateWithPrimitiveType((new int[] {1, 2, 2, 3, 3, 5, 5, 5, 4, 4, 4, 6, 7, 8, 9}));
