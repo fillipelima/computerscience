@@ -2,8 +2,6 @@ package com.fillipelima.general;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 
@@ -25,12 +23,14 @@ import java.util.stream.Collectors;
  * 
  * Example 1:
  * 
- * Input: logs = ["dig1 8 1 5 1","let1 art can","dig2 3 6","let2 own kit dig","let3 art zero"] 
+ * Input: logs = ["dig1 8 1 5 1","let1 art can","dig2 3 6","let2 own kit
+ * dig","let3 art zero"]
  * 
- * Output: ["let1 art can","let3 art zero","let2 own kit dig","dig1 8 1 5 1","dig2 3 6"] 
+ * Output: ["let1 art can","let3 art zero","let2 own kit dig","dig1 8 1 5
+ * 1","dig2 3 6"]
  * 
  * Explanation: The letter-log contents are all different, so their ordering is
- * "art can", "art zero", "own kit dig". The digit-logs have a relative order of 
+ * "art can", "art zero", "own kit dig". The digit-logs have a relative order of
  * "dig1 8 1 5 1", "dig2 3 6".
  * 
  * @author Fillipe Lima
@@ -42,52 +42,30 @@ public class ReorderLogs {
 
 		// Comparator
 		Comparator<String> comparator = (String a, String b) -> {
-			String[] aSplit = a.split("\\s+");
-			String[] bSplit = b.split("\\s+");
-			boolean aIsDigitLog = isNumeric(aSplit[1]);
-			boolean bIsDigitLog = isNumeric(bSplit[1]);
+			// Split into two (id, content)
+			String[] aSplit = a.split("\\s+", 2);
+			String[] bSplit = b.split("\\s+", 2);
+
+			// Find type of log (Letter or Digit)
+			boolean aIsDigitLog = Character.isDigit(aSplit[1].charAt(0));
+			boolean bIsDigitLog = Character.isDigit(bSplit[1].charAt(0));
+
 			// Different types (letter & digit)
 			if (aIsDigitLog != bIsDigitLog) {
-				if (aIsDigitLog)
-					return 1;
-				else
-					return -1;
+				return aIsDigitLog ? 1 : -1;
 			} else if (!aIsDigitLog) { // Same type (letter)
 				// Compare by contents
-				List<String> aContents = Arrays.asList(aSplit).stream().skip(1).collect(Collectors.toList());
-				List<String> bContents = Arrays.asList(bSplit).stream().skip(1).collect(Collectors.toList());
-				int i = 0;
-				int aSize = aContents.size();
-				int bSize = bContents.size();
-				while (i < aSize && i < bSize) {
-					if (!aContents.get(i).equals(bContents.get(i))) {
-						// If found different word, compare and return
-						return aContents.get(i).compareTo(bContents.get(i));
-					}
-					i++;
-				}
-				// Logs are not equals, so compare
-				if (aSize - i > 0)
-					return 1;
-				else if (bSize - i > 0)
-					return -1;
-				// Contents are same, so compare by identifiers
-				String aId = aSplit[0];
-				String bId = bSplit[0];
-				return aId.compareTo(bId);
+				int compareByContent = aSplit[1].compareTo(bSplit[1]);
+				// If contents are not equal return result of comparision
+				if (compareByContent != 0)
+					return compareByContent;
+				// Contents are equals, so compare by identifiers
+				return aSplit[0].compareTo(bSplit[0]);
 			}
 			return 0;
 		};
 
 		// Sort log contents
 		return Arrays.stream(logs).sorted(comparator).toArray(String[]::new);
-	}
-
-	private boolean isNumeric(String s) {
-		for (char c : s.toCharArray()) {
-			if (!Character.isDigit(c))
-				return false;
-		}
-		return true;
 	}
 }
