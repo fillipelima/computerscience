@@ -1,10 +1,10 @@
 package com.fillipelima.strings;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,15 +35,15 @@ public class SmallestDistinctWindow {
 		}
 		return min;
 	}
-
+	
 	// Min Window
 	public static String minWindow(String s, String t) {
 		char[] arr = s.toCharArray();
-		Queue<Character> dictionary = new PriorityQueue<Character>();
+		List<Character> dictionary = new ArrayList<Character>();
 		for (char c : t.toCharArray())
 			dictionary.add(c);
-
-		String min = null;
+			
+        String min = null;
 		List<Character> currentWindow = new ArrayList<Character>();
 		int p1 = 0;
 		int p2 = 0;
@@ -60,25 +60,31 @@ public class SmallestDistinctWindow {
 				p2++;
 			}
 		}
-		return min == null ? "" : min;
-	}
-
-	private static boolean listContainsAll(List<Character> window, Queue<Character> dictionary) {
-		Queue<Character> w = new PriorityQueue<Character>(window);
-		Queue<Character> d = new PriorityQueue<Character>(dictionary);
-		if (w.size() < d.size())
+		return min == null ? "" : min;        
+    }
+	
+	private static boolean listContainsAll(List<Character> window, List<Character> dictionary) {
+		List<Character> w = new ArrayList<Character>(window);
+		w.retainAll(dictionary);		
+		if (w.size() < dictionary.size())
 			return false;
-		while (!w.isEmpty()) {
-			if (w.peek().equals(d.peek()))
-				d.poll();
-			w.poll();
+		Map<Character, Integer> map = new HashMap<Character, Integer>();
+		for (Character c : window)
+			map.put(c, map.getOrDefault(c, 0)+1);
+		
+		for (Character c : dictionary) {
+			if (!map.containsKey(c))
+				return false;
+			int count = map.get(c) - 1; 
+			if (count == -1)
+				return false;
+			map.put(c, count);	
 		}
-		return d.isEmpty();
+		return true;
+			
 	}
-
+	
 	public static void main(String[] args) {
-		System.out.println(SmallestDistinctWindow.minWindow(
-				"cwirwjbfntstplnenpabdttnbiagcnrglbyhnbnavhvmtlqgaqkdmdtnltvpipwuquddvseqabctmsbmllsxrlmegjupyqlpmqsjlyalaegozjbkxtjogxsmgodhgqwsjqeureftknhlwixvdgjjfeyoudvburvdjzxafetqtbdplblrjwcpccdxgyyarvfaxcbciwubzysnzfekeizgledredrvzyyyazakxvlxvfkwlqgpyixjmbargtohrmftngfldskyywwlmccmkzwzayshugontwhicovfhffhbdsphucutatwalfutviorrxvhscoyhvbmntujvofxjbxwispdcexvdscvvtveozresnnpbsmmvjifdxlhdicgchexazcqavusikhlevxaffhkessicwqffuchugyudspncwahuxjzeslll",
-				"ftpejujeztahrwljlao"));
+		System.out.println(SmallestDistinctWindow.minWindow("ADOBECODEBANC", "ABC"));
 	}
 }
