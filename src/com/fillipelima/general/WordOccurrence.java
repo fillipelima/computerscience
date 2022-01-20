@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WordOccurrence {
-	public static void parallelStream() {
+	public static void parallelStream(String s) {
 		
-		String s = "Hi, my name is Lima. Hi, my name is Fillipe.";
 		s = s.replaceAll("[^a-zA-Z0-9\\s+]", "");
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		Arrays.stream(s.split("\\s+")).parallel().forEach( word -> {
@@ -23,6 +22,6 @@ public class WordOccurrence {
 		map.entrySet().stream().sorted(Comparator.comparing(Map.Entry<String, Integer>::getValue).reversed().thenComparing(Map.Entry<String, Integer>::getKey)).forEach(e -> System.out.println(e));
 	}
 	public static void main(String[] args) {
-		WordOccurrence.parallelStream();
+		WordOccurrence.parallelStream("Hi, my name is Lima. Hi, my name is Fillipe.");
 	}
 }
