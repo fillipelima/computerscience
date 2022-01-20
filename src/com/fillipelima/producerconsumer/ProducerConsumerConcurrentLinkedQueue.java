@@ -3,7 +3,7 @@ package com.fillipelima.producerconsumer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ProducerConsumerWithBlockingQueue {
+public class ProducerConsumerConcurrentLinkedQueue {
 	public static void main(String[] args) {
 		
 		BlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>(2);
