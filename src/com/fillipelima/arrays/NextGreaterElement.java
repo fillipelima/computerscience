@@ -1,8 +1,11 @@
 package com.fillipelima.arrays;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +37,24 @@ public class NextGreaterElement {
 		}
 		return ans;
 	}
+	
+    public static int[] findUsingMap(int[] nums1, int[] nums2) {
+        int[] ans = new int[nums1.length];
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        AtomicInteger index = new AtomicInteger();
+        Arrays.stream(nums1).forEach(e -> map.put(e, index.getAndIncrement()));
+        Stack<Integer> stack = new Stack<Integer>();
+        for (int i = nums2.length-1; i >= 0; i--) {        
+            while (!stack.isEmpty() && stack.peek() <= nums2[i])
+                stack.pop();
+            Integer indexOf = map.get(nums2[i]);
+            if (indexOf != null)
+                ans[indexOf] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(nums2[i]);
+        }
+        return ans;
+    }	
+	
 	private static String printArray(int[] arr) {
 		StringBuilder sb = new StringBuilder(); 
 		sb.append("[");
@@ -43,5 +64,6 @@ public class NextGreaterElement {
 	}
 	public static void main(String[] args) {
 		System.out.println("Input: [4,1,2] [1,3,4,2]" + " Expected: " + "[-1,3,-1]" + " Actual: " + printArray(NextGreaterElement.find(new int[] {4, 1, 2}, new int[] {1,3, 4, 2})));
+		System.out.println("Input: [4,1,2] [1,3,4,2]" + " Expected: " + "[-1,3,-1]" + " Actual: " + printArray(NextGreaterElement.findUsingMap(new int[] {4, 1, 2}, new int[] {1,3, 4, 2})));
 	}
 }
