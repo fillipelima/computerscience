@@ -5,11 +5,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ProducerConsumerMultiThread {
 	List<Integer> list = new ArrayList<Integer>();
 	ReentrantLock lock = new ReentrantLock();
+
+	Condition full = lock.newCondition();
+	Condition empty = lock.newCondition();
+
+	private static final int CAPACITY = 2;
 
 	private static final int NUM_PRODUCERS = 10;
 
@@ -22,7 +28,13 @@ public class ProducerConsumerMultiThread {
 		lock.lock();
 		System.out.println("Thread name:" + Thread.currentThread().getName());
 		try {
+			if (list.size() == CAPACITY)
+				full.await();
 			list.add(n);
+			// Notify empty waiters
+			empty.signalAll();
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			lock.unlock();
 		}
@@ -32,7 +44,15 @@ public class ProducerConsumerMultiThread {
 		lock.lock();
 		System.out.println("Thread name:" + Thread.currentThread().getName());
 		try {
-			return list.remove(0);
+			if (list.size() == 0)
+				empty.await();
+			int removed = list.remove(0);
+			// Notify full waiters
+			full.signalAll();
+			return removed;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		} finally {
 			lock.unlock();
 		}
