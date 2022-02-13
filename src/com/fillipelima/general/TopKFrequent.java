@@ -1,7 +1,9 @@
 package com.fillipelima.general;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,4 +50,11 @@ public class TopKFrequent {
 
 		return list.stream().map(v -> v[0]).limit(k).collect(Collectors.toList());
 	}
+	
+	// With Streams
+    public int[] topKFrequentWithStream(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        Arrays.stream(nums).forEach(e -> map.put(e, map.getOrDefault(e, 0)+1));
+        return map.entrySet().stream().sorted(Comparator.comparing(Map.Entry<Integer, Integer>::getValue).reversed()).mapToInt(x -> x.getKey()).limit(k).toArray();
+    }
 }

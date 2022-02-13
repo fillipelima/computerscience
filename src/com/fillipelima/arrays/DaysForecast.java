@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Days forecast for camping
  * 
  * Input: [3,2,2,2,3,4], 2 Output: [3, 4]
  *

@@ -1,5 +1,6 @@
 package com.fillipelima.strings;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
@@ -39,6 +40,38 @@ public class ValidParentheses {
 		}
 		return stack.isEmpty();
 	}
+	
+	   public boolean isValid2(String s) {
+	        if (s.length() == 0)
+	            return false;
+	        Stack<String> stack = new Stack<String>();
+	        HashMap<String, String> openMap = new HashMap<String, String>();
+	        openMap.put("(", ")");
+	        openMap.put("{", "}");
+	        openMap.put("[", "]");
+	        HashMap<String, String> closeMap = new HashMap<String, String>();
+	        closeMap.put(")", "(");
+	        closeMap.put("}", "{");
+	        closeMap.put("]", "[");      
+	        for (int i = 0; i < s.length(); i++) {
+	            char c = s.charAt(i);
+	            String s2 = Character.toString(c);
+	            if (openMap.containsKey(s2)) {
+	                stack.push(s2);
+	            }else{
+	                if (!stack.isEmpty()) {
+	                    String pop = stack.pop();
+	                    if (!closeMap.get(s2).equals(pop))
+	                        return false;
+	                }else{
+	                    return false;
+	                }
+	            }
+	        }
+	        if (!stack.isEmpty())
+	            return false;
+	        return true;
+	    }	
 
 	public static void main(String[] args) {
 		System.out.println(ValidParentheses.isValid("((([{[{[()]}]}])))"));

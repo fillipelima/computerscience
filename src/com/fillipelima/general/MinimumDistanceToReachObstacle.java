@@ -1,7 +1,6 @@
 package com.fillipelima.general;
 
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
@@ -28,48 +27,6 @@ import java.util.Queue;
  *
  */
 public class MinimumDistanceToReachObstacle {
-	// My implementation
-	public static int find(int[][] m) {
-		// Min Heap of points (x, y) and distance
-		// [0] = x
-		// [1] = y
-		// [2] = distance
-		// Compare by distance [2]
-		Queue<int[]> queue = new PriorityQueue<int[]>((a, b) -> a[2] - b[2]);
-
-		// Add first node
-		queue.add(new int[] { 0, 0, 0 });
-
-		// Create directios
-		int[][] directions = new int[][] { 
-				{ 0, 1 }, // right
-				{ 1, 0 }, // down
-				{ 0, -1 }, // left
-				{ -1, 0 } }; // up
-
-		// BFS - Djikstra Algorithm
-		while (!queue.isEmpty()) {
-			// Current Node
-			int[] curr = queue.poll();
-
-			// Found destiny (Obstacle)
-			if (m[curr[0]][curr[1]] == 9)
-				return curr[2];
-
-			// Possible paths
-			for (int[] d : directions) {
-				// Calculate current direction change
-				int x = curr[0] + d[0];
-				int y = curr[1] + d[1];
-
-				// Make sure indexes to desired direction are possible (are in range of matrix
-				// and differs from zero (trenches))
-				if (x >= 0 && y >= 0 && x < m.length && y < m[0].length && m[x][y] != 0)
-					queue.add(new int[] { x, y, curr[2] + 1 });
-			}
-		}
-		return -1;
-	}
 
 	// From leetcode discussion
 	public static int demolitionRobot(int[][] grid) {
@@ -112,7 +69,5 @@ public class MinimumDistanceToReachObstacle {
 	public static void main(String[] args) {
 		System.out.println(
 				MinimumDistanceToReachObstacle.demolitionRobot(new int[][] { { 1, 0, 0 }, { 1, 0, 0 }, { 1, 9, 1 } }));
-		System.out.println(MinimumDistanceToReachObstacle.find(new int[][] { { 1, 0, 0 }, { 0, 0, 0 }, { 1, 9, 1 } }));
-		System.out.println(MinimumDistanceToReachObstacle.find(new int[][] { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 9 } }));
 	}
 }
