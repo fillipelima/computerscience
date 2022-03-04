@@ -2,6 +2,8 @@ package com.fillipelima.arrays;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class MergeIntervals {
     
@@ -21,7 +23,25 @@ public class MergeIntervals {
                 merged.getLast()[1] = Math.max(merged.getLast()[1], interval[1]);
             }
         }
-        return merged.toArray(new int[merged.size()][]);
+        
+        return merged.stream().toArray(int[][]::new);
+    }    
+    
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (a,b) -> a[0] - b[0]);
+        Queue<int[]> maxHeap = new PriorityQueue<int[]>((a,b) -> b[1] - a[1]);
+        maxHeap.add(intervals[0]);        
+        for (int i = 1; i < intervals.length; i++) {
+            int[] curr = maxHeap.poll();
+            if (curr[1] >= intervals[i][0]) {
+                if (curr[1] <= intervals[i][1])
+                    curr[1] = intervals[i][1];
+            }else{
+                maxHeap.add(intervals[i]);
+            }
+            maxHeap.add(curr);                                 
+        }
+        return maxHeap.stream().toArray(int[][]::new);
     }    
     
 }
