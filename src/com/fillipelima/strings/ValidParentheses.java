@@ -21,6 +21,20 @@ import java.util.Stack;
  */
 
 public class ValidParentheses {
+	
+    public boolean isValid3(String s) {
+        Map<Character, Character> map = Map.of('(', ')', '[', ']', '{', '}');
+        Stack<Character> stack = new Stack<Character>();
+        for (int i = 0; i < s.length(); i++) {
+            if (map.containsKey(s.charAt(i)))
+                stack.add(map.get(s.charAt(i)));
+            else if (!stack.isEmpty() && stack.peek().equals(s.charAt(i)))
+                stack.pop();
+            else
+                return false;
+        }
+        return stack.isEmpty();       
+    }	
 
 	public static boolean isValid(String s) {
 		if (s.length() < 2)
